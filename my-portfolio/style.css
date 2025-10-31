@@ -235,7 +235,7 @@ body:has(.hamburger-menu:hover) .cursor-follower {
 
 .hero-title {
   font-family: var(--font-heading);
-  font-size: clamp(3rem, 10vw, 9rem);
+  font-size: clamp(3rem, 8vw, 7rem);
   font-weight: 700;
   line-height: 1.1;
   text-transform: uppercase;
