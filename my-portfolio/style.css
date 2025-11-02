@@ -225,6 +225,8 @@ body:has(.hamburger-menu:hover) .cursor-follower {
   justify-content: center;
   padding: 0 2.5rem;
   padding-top: 10rem; /* Offset for header */
+  position: relative;
+  z-index: 7; /* <-- LAYER 7 */
 }
 
 .hero-content {
@@ -235,7 +237,7 @@ body:has(.hamburger-menu:hover) .cursor-follower {
 
 .hero-title {
   font-family: var(--font-heading);
-  font-size: clamp(3rem, 8vw, 7rem);
+  font-size: clamp(3rem, 8vw, 7rem); /* <-- Your smaller font size */
   font-weight: 700;
   line-height: 1.1;
   text-transform: uppercase;
@@ -258,17 +260,9 @@ body:has(.hamburger-menu:hover) .cursor-follower {
   opacity: 0; /* Animated by GSAP */
 }
 
-.hero-cta-container {
-  margin-top: 3rem;
-  display: flex;
-  gap: 1rem;
-  opacity: 0; /* Animated by GSAP */
-}
-
 /* --------------------
-   5. BUTTONS & LINKS
+   5. BUTTONS (REMOVED)
    -------------------- */
-
 .btn {
   font-family: var(--font-body);
   font-size: 1rem;
@@ -279,7 +273,7 @@ body:has(.hamburger-menu:hover) .cursor-follower {
   display: inline-block;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  overflow: hidden; /* For letter animation */
+  overflow: hidden;
 }
 
 .btn span {
@@ -289,43 +283,6 @@ body:has(.hamburger-menu:hover) .cursor-follower {
 
 .btn:hover span {
   transform: translateY(-120%);
-}
-
-/* Staggered letter animation on hover */
-.btn:hover span:nth-child(1) {
-  transition-delay: 0.01s;
-}
-.btn:hover span:nth-child(2) {
-  transition-delay: 0.02s;
-}
-.btn:hover span:nth-child(3) {
-  transition-delay: 0.03s;
-}
-.btn:hover span:nth-child(4) {
-  transition-delay: 0.04s;
-}
-.btn:hover span:nth-child(5) {
-  transition-delay: 0.05s;
-}
-.btn:hover span:nth-child(6) {
-  transition-delay: 0.06s;
-}
-/* ... and so on ... */
-
-.btn.btn-primary {
-  background-color: var(--color-primary);
-  color: var(--color-bg);
-}
-
-.btn.btn-secondary {
-  border: 1px solid var(--color-border);
-  color: var(--color-text);
-}
-
-.btn.btn-secondary:hover {
-  background-color: var(--color-primary);
-  color: var(--color-bg);
-  border-color: var(--color-primary);
 }
 
 /* --------------------
@@ -351,7 +308,7 @@ body:has(.hamburger-menu:hover) .cursor-follower {
   line-height: 1.6;
 }
 
-/* GSAP Reveal Animation */
+/* GSAP Reveal Animation - THIS IS THE CORRECT VERSION */
 .reveal-up {
   opacity: 0;
   transform: translateY(50px);
@@ -367,6 +324,11 @@ body:has(.hamburger-menu:hover) .cursor-follower {
 /* --------------------
    7. ABOUT SECTION
    -------------------- */
+
+.about {
+  position: relative;
+  z-index: 6; /* <-- LAYER 6 */
+}
 
 .about-content {
   display: flex;
@@ -389,6 +351,25 @@ body:has(.hamburger-menu:hover) .cursor-follower {
   color: var(--color-primary);
   font-weight: 600;
 }
+
+/* NEW STYLES FOR YOUR FOCUS LIST */
+.about-text .focus-title {
+    margin-top: 1.5rem;
+    margin-bottom: 1rem;
+    color: var(--color-primary);
+    font-weight: 600;
+    font-size: 1.1rem;
+}
+.about-text .focus-list {
+    list-style-position: inside;
+    margin-left: 0.5rem;
+    line-height: 1.7;
+    color: var(--color-text-muted);
+}
+.about-text .focus-outro {
+    margin-top: 1.5rem;
+}
+/* END NEW STYLES */
 
 .about-visual {
   flex-basis: 40%;
@@ -424,8 +405,72 @@ body:has(.hamburger-menu:hover) .cursor-follower {
 }
 
 /* --------------------
+   NEW: SKILLS SECTION
+   -------------------- */
+.skills {
+  position: relative;
+  z-index: 5; /* <-- LAYER 5 */
+}
+
+.skills-grid-container {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2rem;
+}
+
+.skill-category-card {
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  padding: 2rem;
+  background-color: #0c0c0c;
+  transition: all 0.3s ease;
+}
+
+.skill-category-card:hover {
+  transform: translateY(-5px);
+  border-color: var(--color-primary);
+}
+
+.skill-category-card h2 { /* Targeting H2, as in your HTML */
+  font-family: var(--font-heading);
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--color-primary);
+  margin-bottom: 1.5rem;
+  border-bottom: 1px solid var(--color-border);
+  padding-bottom: 1rem;
+}
+
+.skills-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  justify-content: flex-start;
+}
+
+.skill-item {
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  color: var(--color-text);
+  padding: 0.5rem 1rem;
+  border: 1px solid var(--color-border);
+  border-radius: 2rem;
+  transition: all 0.3s ease;
+}
+
+.skill-item:hover {
+  background-color: var(--color-primary);
+  color: var(--color-bg);
+  border-color: var(--color-primary);
+}
+
+/* --------------------
    8. PROJECTS SECTION
    -------------------- */
+.projects {
+    position: relative;
+    z-index: 4; /* <-- LAYER 4 */
+}
 
 .project-list {
   display: flex;
@@ -448,6 +493,14 @@ body:has(.hamburger-menu:hover) .cursor-follower {
   flex-basis: 60%;
   overflow: hidden;
   border-radius: 8px;
+}
+
+/* NEW: This makes the <iframe> responsive */
+.project-image iframe {
+    width: 100%;
+    aspect-ratio: 16 / 9; /* Sets a 16:9 widescreen ratio */
+    border-radius: 8px; /* Matches the old image style */
+    border: none; /* Removes default border */
 }
 
 .project-image img {
@@ -495,23 +548,6 @@ body:has(.hamburger-menu:hover) .cursor-follower {
 .project-link:hover span {
   transform: translateY(-120%);
 }
-/* Staggered letter animation on hover */
-.project-link:hover span:nth-child(1) {
-  transition-delay: 0.01s;
-}
-.project-link:hover span:nth-child(2) {
-  transition-delay: 0.02s;
-}
-.project-link:hover span:nth-child(3) {
-  transition-delay: 0.03s;
-}
-.project-link:hover span:nth-child(4) {
-  transition-delay: 0.04s;
-}
-.project-link:hover span:nth-child(5) {
-  transition-delay: 0.05s;
-}
-/* ... and so on ... */
 
 .project-tagline {
   font-size: 1.2rem;
@@ -520,16 +556,58 @@ body:has(.hamburger-menu:hover) .cursor-follower {
   margin-bottom: 1.5rem;
 }
 
-.project-description {
+/* NEW: Project Description Fixes */
+.project-description-intro,
+.project-description-outro {
   font-size: 1rem;
   line-height: 1.6;
-  margin-bottom: 2rem;
+  margin-bottom: 1.5rem;
+  color: var(--color-text-muted);
 }
+
+.project-description-outro {
+  margin-top: 1.5rem;
+  font-style: italic;
+}
+
+.project-tool-list {
+  list-style: none;
+  padding-left: 0;
+  margin-top: 1.5rem;
+}
+
+.project-tool-list li {
+  font-family: var(--font-body);
+  font-size: 1rem;
+  line-height: 1.7;
+  color: var(--color-text);
+  padding-left: 2rem; 
+  position: relative;
+  margin-bottom: 1rem;
+}
+
+.project-tool-list li::before {
+  content: '✓';
+  color: var(--color-primary);
+  font-weight: 600;
+  position: absolute;
+  left: 0;
+  top: 0px;
+  font-size: 1.2rem;
+}
+
+.project-tool-list li strong {
+  color: var(--color-text);
+  font-weight: 600;
+}
+/* END: Project Description Fixes */
+
 
 .project-stack {
   display: flex;
   flex-wrap: wrap;
   gap: 0.5rem;
+  margin-top: 2rem; /* Added margin */
 }
 
 .project-stack span {
@@ -543,9 +621,14 @@ body:has(.hamburger-menu:hover) .cursor-follower {
 /* --------------------
    9. RECOGNITION SECTION
    -------------------- */
+.recognition {
+    position: relative;
+    z-index: 3; /* <-- LAYER 3 */
+}
 
+/* NEW: "Insane" engaging styles */
 .recognition-list {
-  list-style: none;
+  list-style: none; /* This removes the ugly bullet points */
   padding: 0;
   border-top: 1px solid var(--color-border);
 }
@@ -558,19 +641,20 @@ body:has(.hamburger-menu:hover) .cursor-follower {
 
 .recognition-item span {
   font-family: var(--font-heading);
-  font-size: clamp(2rem, 4vw, 3rem);
+  font-size: 2.5rem; /* Makes the text big and impressive */
   font-weight: 600;
   color: var(--color-primary);
   padding-left: 1rem;
-  transition: padding-left 0.3s ease;
+  transition: padding-left 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+  display: block; /* Lets it take up the full row */
 }
 
 .recognition-item:hover {
-  background-color: #111;
+  background-color: #111; /* A subtle dark hover */
 }
 
 .recognition-item:hover span {
-  padding-left: 3rem;
+  padding-left: 3rem; /* The text slides to the right on hover */
 }
 
 /* --------------------
@@ -579,13 +663,8 @@ body:has(.hamburger-menu:hover) .cursor-follower {
 
 .contact {
   text-align: center;
-}
-
-.contact-ctas {
-  margin-top: 3rem;
-  display: flex;
-  justify-content: center;
-  gap: 1rem;
+  position: relative;
+  z-index: 2; /* <-- LAYER 2 */
 }
 
 .contact-socials {
@@ -617,6 +696,8 @@ body:has(.hamburger-menu:hover) .cursor-follower {
   padding: 6rem 0 3rem 0;
   text-align: center;
   border-top: 1px solid var(--color-border);
+  position: relative;
+  z-index: 1; /* <-- LAYER 1 */
 }
 
 .footer p {
@@ -644,17 +725,6 @@ body:has(.hamburger-menu:hover) .cursor-follower {
 .return-to-home:hover span {
   transform: translateY(-120%);
 }
-/* Staggered letter animation on hover */
-.return-to-home:hover span:nth-child(1) {
-  transition-delay: 0.01s;
-}
-.return-to-home:hover span:nth-child(2) {
-  transition-delay: 0.02s;
-}
-.return-to-home:hover span:nth-child(3) {
-  transition-delay: 0.03s;
-}
-/* ... and so on ... */
 
 /* --------------------
    12. RESPONSIVENESS
@@ -711,6 +781,10 @@ body:has(.hamburger-menu:hover) .cursor-follower {
   .project-content {
     flex-basis: auto;
   }
+
+  .skills-grid-container {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
 
 /* Mobile ( <= 600px ) */
@@ -733,17 +807,11 @@ body:has(.hamburger-menu:hover) .cursor-follower {
   .logo span {
     display: none;
   }
-
-  .hero-cta-container,
-  .contact-ctas {
-    flex-direction: column;
-    align-items: stretch;
-  }
-
+  
   .btn {
     text-align: center;
   }
-
+  
   .recognition-item span {
     font-size: 1.8rem;
   }
@@ -752,11 +820,10 @@ body:has(.hamburger-menu:hover) .cursor-follower {
     flex-direction: column;
     gap: 2rem;
   }
-}
-/* --- CodePen Quick-Fix --- */
-/* This forces all hidden sections to be visible */
 
-.reveal-up {
-  opacity: 1 !important;
-  transform: none !important;
+  .skills-grid-container {
+    grid-template-columns: 1fr;
+  }
 }
+
+/* The broken "CodePen Quick-Fix" is permanently gone. */

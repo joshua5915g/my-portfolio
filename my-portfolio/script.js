@@ -33,7 +33,7 @@
           y: -100,
           opacity: 0,
           duration: 0.8,
-          ease: "power2.inOut"
+          ease: "power2.inOut",
         })
           .to(
             counterElement,
@@ -41,7 +41,7 @@
               y: -100,
               opacity: 0,
               duration: 0.8,
-              ease: "power2.inOut"
+              ease: "power2.inOut",
             },
             "-=0.5"
           )
@@ -53,7 +53,7 @@
               preloader.style.display = "none";
               document.body.style.overflow = "visible"; // Allow scrolling
               initHeroAnimations(); // Start hero animations after preloader
-            }
+            },
           });
       } else {
         count++;
@@ -72,11 +72,11 @@
       smooth: true,
       lerp: 0.08, // Controls the "smoothness"
       smartphone: {
-        smooth: true // Enable smooth scroll on mobile
+        smooth: true, // Enable smooth scroll on mobile
       },
       tablet: {
-        smooth: true // Enable smooth scroll on tablet
-      }
+        smooth: true, // Enable smooth scroll on tablet
+      },
     });
 
     // Update body height
@@ -96,12 +96,12 @@
           top: 0,
           left: 0,
           width: window.innerWidth,
-          height: window.innerHeight
+          height: window.innerHeight,
         };
       },
       pinType: document.querySelector("[data-scroll-container]").style.transform
         ? "transform"
-        : "fixed"
+        : "fixed",
     });
 
     // Refresh ScrollTrigger and LocomotiveScroll on window resize or updates
@@ -119,7 +119,7 @@
         duration: 0.3,
         x: e.clientX,
         y: e.clientY,
-        ease: "power3.out"
+        ease: "power3.out",
       });
     });
 
@@ -127,7 +127,7 @@
     document.body.addEventListener("mouseleave", () => {
       gsap.to(cursor, {
         duration: 0.3,
-        opacity: 0
+        opacity: 0,
       });
     });
 
@@ -135,7 +135,7 @@
     document.body.addEventListener("mouseenter", () => {
       gsap.to(cursor, {
         duration: 0.3,
-        opacity: 1
+        opacity: 1,
       });
     });
   }
@@ -172,14 +172,14 @@
         opacity: 1,
         duration: 1.2,
         stagger: 0.1,
-        ease: "power3.out"
+        ease: "power3.out",
       })
       .to(
         ".hero-subtitle",
         {
           opacity: 1,
           duration: 1,
-          ease: "power2.out"
+          ease: "power2.out",
         },
         "-=0.8"
       )
@@ -188,7 +188,7 @@
         {
           opacity: 1,
           duration: 1,
-          ease: "power2.out"
+          ease: "power2.out",
         },
         "-=0.6"
       );
@@ -203,10 +203,6 @@
         if (dir === "enter") {
           obj.el.classList.add("is-inview");
         }
-        // Optional: Remove class when scrolling back up
-        // if (dir === 'leave') {
-        //     obj.el.classList.remove('is-inview');
-        // }
       }
     });
 
@@ -221,13 +217,23 @@
 
   // --- INITIALIZE ALL FUNCTIONS ---
 
-  // Use 'load' event to ensure all assets (images, etc.) are loaded
-  window.addEventListener("load", () => {
-    initPreloader();
-    initSmoothScroll();
-    initCursorFollower();
-    initMobileNav();
-    initScrollAnimations();
-    // initHeroAnimations() is called by the preloader
+  window.addEventListener('load', () => {
+      initPreloader();
+      initSmoothScroll();
+      initCursorFollower();
+      initMobileNav();
+      initScrollAnimations();
+      // initHeroAnimations() is called by the preloader
+
+      // --- FIX FOR MISSING CONTENT ---
+      // This forces the scroll library to re-calculate the page height
+      // after all your content is loaded.
+      setTimeout(() => {
+          if (locoScroll) {
+              locoScroll.update();
+          }
+      }, 500); // 500ms delay to be safe
+      // --- END OF FIX ---
   });
+
 })();
