@@ -20,29 +20,86 @@
 }
 
 html {
-  /* This is for the data-scroll-to to work */
   position: relative;
 }
 
 body {
   font-family: var(--font-body);
-  background-color: var(--color-bg);
+  background-color: var(--color-bg); /* This is the fallback color */
   color: var(--color-text);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  cursor: none; /* Hide default cursor */
+  cursor: none;
 }
 
-/* Hide locomotive-scroll default scrollbar */
-.c-scrollbar {
-  display: none;
+/* ==================================
+  NEW 3-LAYER PARALLAX BACKGROUND
+==================================
+*/
+
+/* LAYER 2: THE STARS (FIXED) */
+#stars-canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -2; /* Puts it BEHIND everything */
 }
 
-/* Base container */
+/* LAYER 1: SCROLLING SECTION BACKGROUNDS */
+.background-section {
+  position: relative; /* This is the container */
+  overflow: hidden;  /* This "clips" the image */
+  z-index: 1; /* Sits on top of the star canvas */
+}
+
+.section-bg-image {
+  /*
+    This is the KEY for PARALLAX.
+    We set it to be absolute and cover the whole section,
+    but Locomotive Scroll (using data-scroll-speed)
+    will move it at a different speed.
+  */
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center center;
+  
+  /* The "not too visible" effect */
+  opacity: 0.1;
+  filter: grayscale(100%);
+  
+  /* Sits BEHIND the content in this section */
+  z-index: -1;
+}
+
+/* The .container needs a z-index to show up
+   on top of the section background */
 .container {
   max-width: 1200px;
   margin: 0 auto;
   padding: 0 2rem;
+  position: relative; /* This makes z-index work */
+  z-index: 2; /* Sits on top of .section-bg-image */
+}
+
+/* Make Hero content sit on top too */
+.hero-content {
+  max-width: 1400px;
+  margin: 0 auto;
+  width: 100%;
+  position: relative;
+  z-index: 2;
+}
+
+
+/* Hide locomotive-scroll default scrollbar */
+.c-scrollbar {
+  display: none;
 }
 
 /* Base section padding */
@@ -105,13 +162,12 @@ a {
   border: 1px solid var(--color-primary);
   border-radius: 50%;
   transform: translate(-50%, -50%);
-  pointer-events: none; /* Allows clicks to pass through */
+  pointer-events: none;
   z-index: 999;
   transition: width 0.3s ease, height 0.3s ease, background-color 0.3s ease,
     mix-blend-mode 0.3s ease;
 }
 
-/* Cursor scale/blend effect on hover */
 body:has(a:hover) .cursor-follower,
 body:has(button:hover) .cursor-follower,
 body:has(.btn:hover) .cursor-follower,
@@ -206,7 +262,6 @@ body:has(.hamburger-menu:hover) .cursor-follower {
   transition: transform 0.3s ease, opacity 0.3s ease;
 }
 
-/* Hamburger active state */
 .hamburger-menu.active .line-1 {
   transform: translateY(8px) rotate(45deg);
 }
@@ -224,20 +279,12 @@ body:has(.hamburger-menu:hover) .cursor-follower {
   flex-direction: column;
   justify-content: center;
   padding: 0 2.5rem;
-  padding-top: 10rem; /* Offset for header */
-  position: relative;
-  z-index: 7; /* <-- LAYER 7 */
-}
-
-.hero-content {
-  max-width: 1400px;
-  margin: 0 auto;
-  width: 100%;
+  padding-top: 10rem;
 }
 
 .hero-title {
   font-family: var(--font-heading);
-  font-size: clamp(3rem, 8vw, 7rem); /* <-- Your smaller font size */
+  font-size: clamp(3rem, 8vw, 7rem);
   font-weight: 700;
   line-height: 1.1;
   text-transform: uppercase;
@@ -246,7 +293,6 @@ body:has(.hamburger-menu:hover) .cursor-follower {
 
 .hero-title .hero-line {
   display: block;
-  /* This will be animated by GSAP */
   opacity: 0;
   transform: translateY(100%);
 }
@@ -257,7 +303,7 @@ body:has(.hamburger-menu:hover) .cursor-follower {
   max-width: 600px;
   margin-top: 2rem;
   line-height: 1.6;
-  opacity: 0; /* Animated by GSAP */
+  opacity: 0;
 }
 
 /* --------------------
@@ -308,7 +354,6 @@ body:has(.hamburger-menu:hover) .cursor-follower {
   line-height: 1.6;
 }
 
-/* GSAP Reveal Animation - THIS IS THE CORRECT VERSION */
 .reveal-up {
   opacity: 0;
   transform: translateY(50px);
@@ -324,11 +369,6 @@ body:has(.hamburger-menu:hover) .cursor-follower {
 /* --------------------
    7. ABOUT SECTION
    -------------------- */
-
-.about {
-  position: relative;
-  z-index: 6; /* <-- LAYER 6 */
-}
 
 .about-content {
   display: flex;
@@ -352,7 +392,6 @@ body:has(.hamburger-menu:hover) .cursor-follower {
   font-weight: 600;
 }
 
-/* NEW STYLES FOR YOUR FOCUS LIST */
 .about-text .focus-title {
     margin-top: 1.5rem;
     margin-bottom: 1rem;
@@ -369,7 +408,6 @@ body:has(.hamburger-menu:hover) .cursor-follower {
 .about-text .focus-outro {
     margin-top: 1.5rem;
 }
-/* END NEW STYLES */
 
 .about-visual {
   flex-basis: 40%;
@@ -405,19 +443,14 @@ body:has(.hamburger-menu:hover) .cursor-follower {
 }
 
 /* --------------------
-   NEW: SKILLS SECTION
+   SKILLS SECTION
    -------------------- */
-.skills {
-  position: relative;
-  z-index: 5; /* <-- LAYER 5 */
-}
-
+   
 .skills-grid-container {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 2rem;
 }
-
 .skill-category-card {
   border: 1px solid var(--color-border);
   border-radius: 8px;
@@ -425,13 +458,11 @@ body:has(.hamburger-menu:hover) .cursor-follower {
   background-color: #0c0c0c;
   transition: all 0.3s ease;
 }
-
 .skill-category-card:hover {
   transform: translateY(-5px);
   border-color: var(--color-primary);
 }
-
-.skill-category-card h2 { /* Targeting H2, as in your HTML */
+.skill-category-card h2 { 
   font-family: var(--font-heading);
   font-size: 1.5rem;
   font-weight: 600;
@@ -440,14 +471,12 @@ body:has(.hamburger-menu:hover) .cursor-follower {
   border-bottom: 1px solid var(--color-border);
   padding-bottom: 1rem;
 }
-
 .skills-list {
   display: flex;
   flex-wrap: wrap;
   gap: 0.75rem;
   justify-content: flex-start;
 }
-
 .skill-item {
   font-family: var(--font-body);
   font-size: 0.9rem;
@@ -457,7 +486,6 @@ body:has(.hamburger-menu:hover) .cursor-follower {
   border-radius: 2rem;
   transition: all 0.3s ease;
 }
-
 .skill-item:hover {
   background-color: var(--color-primary);
   color: var(--color-bg);
@@ -467,10 +495,6 @@ body:has(.hamburger-menu:hover) .cursor-follower {
 /* --------------------
    8. PROJECTS SECTION
    -------------------- */
-.projects {
-    position: relative;
-    z-index: 4; /* <-- LAYER 4 */
-}
 
 .project-list {
   display: flex;
@@ -484,7 +508,6 @@ body:has(.hamburger-menu:hover) .cursor-follower {
   align-items: center;
 }
 
-/* Alternating layout */
 .project-card:nth-child(even) {
   flex-direction: row-reverse;
 }
@@ -495,12 +518,11 @@ body:has(.hamburger-menu:hover) .cursor-follower {
   border-radius: 8px;
 }
 
-/* NEW: This makes the <iframe> responsive */
 .project-image iframe {
     width: 100%;
-    aspect-ratio: 16 / 9; /* Sets a 16:9 widescreen ratio */
-    border-radius: 8px; /* Matches the old image style */
-    border: none; /* Removes default border */
+    aspect-ratio: 16 / 9; 
+    border-radius: 8px; 
+    border: none; 
 }
 
 .project-image img {
@@ -537,7 +559,7 @@ body:has(.hamburger-menu:hover) .cursor-follower {
   font-size: 1rem;
   text-transform: uppercase;
   letter-spacing: 0.1em;
-  overflow: hidden; /* For letter animation */
+  overflow: hidden; 
 }
 
 .project-link span {
@@ -556,7 +578,6 @@ body:has(.hamburger-menu:hover) .cursor-follower {
   margin-bottom: 1.5rem;
 }
 
-/* NEW: Project Description Fixes */
 .project-description-intro,
 .project-description-outro {
   font-size: 1rem;
@@ -600,14 +621,12 @@ body:has(.hamburger-menu:hover) .cursor-follower {
   color: var(--color-text);
   font-weight: 600;
 }
-/* END: Project Description Fixes */
-
 
 .project-stack {
   display: flex;
   flex-wrap: wrap;
   gap: 0.5rem;
-  margin-top: 2rem; /* Added margin */
+  margin-top: 2rem; 
 }
 
 .project-stack span {
@@ -619,42 +638,91 @@ body:has(.hamburger-menu:hover) .cursor-follower {
 }
 
 /* --------------------
-   9. RECOGNITION SECTION
+   9. RECOGNITION SECTION (ACCORDION)
    -------------------- */
-.recognition {
-    position: relative;
-    z-index: 3; /* <-- LAYER 3 */
-}
 
-/* NEW: "Insane" engaging styles */
-.recognition-list {
-  list-style: none; /* This removes the ugly bullet points */
-  padding: 0;
+.accordion-container {
   border-top: 1px solid var(--color-border);
 }
 
-.recognition-item {
-  padding: 3rem 0;
+.accordion-item {
   border-bottom: 1px solid var(--color-border);
-  transition: background-color 0.3s ease;
 }
 
-.recognition-item span {
+.accordion-button {
   font-family: var(--font-heading);
-  font-size: 2.5rem; /* Makes the text big and impressive */
+  font-size: 2.5rem;
   font-weight: 600;
   color: var(--color-primary);
-  padding-left: 1rem;
+  padding: 3rem 1rem;
+  transition: background-color 0.3s ease;
+  display: block;
+  width: 100%;
+  background: transparent;
+  border: none;
+  cursor: none;
+  text-align: left;
+  position: relative;
+  padding-right: 4rem; 
+}
+
+.accordion-button span {
+  display: block;
   transition: padding-left 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
-  display: block; /* Lets it take up the full row */
 }
 
-.recognition-item:hover {
-  background-color: #111; /* A subtle dark hover */
+.accordion-button::before,
+.accordion-button::after {
+  content: '';
+  position: absolute;
+  right: 1rem;
+  top: 50%;
+  width: 24px;
+  height: 2px;
+  background-color: var(--color-primary);
+  transition: transform 0.3s ease;
 }
 
-.recognition-item:hover span {
-  padding-left: 3rem; /* The text slides to the right on hover */
+.accordion-button::after {
+  transform: translateY(-50%) rotate(90deg);
+}
+.accordion-button::before {
+   transform: translateY(-50%);
+}
+
+.accordion-button:hover {
+  background-color: #111;
+}
+.accordion-button:hover span {
+  padding-left: 2rem; 
+}
+
+.accordion-button.active::after {
+  transform: translateY(-50%) rotate(0deg);
+}
+
+.accordion-content {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.5s ease-out, padding 0.5s ease-out;
+  padding: 0 2rem;
+}
+
+.accordion-content.open {
+  max-height: 1000px; 
+  padding: 2rem 2rem 3rem 2rem;
+  transition: max-height 1s ease-in, padding 0.5s ease-in;
+}
+
+.course-list {
+  list-style: disc; 
+  padding-left: 1.5rem;
+  color: var(--color-text-muted);
+}
+
+.course-list li {
+  font-size: 1.1rem;
+  line-height: 1.8;
 }
 
 /* --------------------
@@ -663,8 +731,6 @@ body:has(.hamburger-menu:hover) .cursor-follower {
 
 .contact {
   text-align: center;
-  position: relative;
-  z-index: 2; /* <-- LAYER 2 */
 }
 
 .contact-socials {
@@ -696,8 +762,6 @@ body:has(.hamburger-menu:hover) .cursor-follower {
   padding: 6rem 0 3rem 0;
   text-align: center;
   border-top: 1px solid var(--color-border);
-  position: relative;
-  z-index: 1; /* <-- LAYER 1 */
 }
 
 .footer p {
@@ -735,7 +799,7 @@ body:has(.hamburger-menu:hover) .cursor-follower {
   .nav-links {
     position: fixed;
     top: 0;
-    right: -100%; /* Start off-screen */
+    right: -100%;
     width: 100%;
     max-width: 400px;
     height: 100vh;
@@ -765,7 +829,7 @@ body:has(.hamburger-menu:hover) .cursor-follower {
   }
 
   .about-visual {
-    order: -1; /* Move image to top */
+    order: -1;
   }
 
   .project-card,
@@ -812,7 +876,7 @@ body:has(.hamburger-menu:hover) .cursor-follower {
     text-align: center;
   }
   
-  .recognition-item span {
+  .accordion-button {
     font-size: 1.8rem;
   }
 
@@ -825,5 +889,3 @@ body:has(.hamburger-menu:hover) .cursor-follower {
     grid-template-columns: 1fr;
   }
 }
-
-/* The broken "CodePen Quick-Fix" is permanently gone. */

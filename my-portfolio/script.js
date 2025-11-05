@@ -1,7 +1,6 @@
 /*
  * SCRIPT.JS
  * * This file handles all client-side interactivity for the portfolio.
- * It uses GSAP for animations and Locomotive Scroll for smooth scrolling.
  * * 1. Preloader Animation
  * 2. Locomotive Scroll Initialization
  * 3. GSAP ScrollTrigger Integration
@@ -9,6 +8,8 @@
  * 5. Mobile Navigation Toggle
  * 6. Hero Text Animation
  * 7. General Scroll-Triggered Animations ("reveal-up")
+ * 8. NEW: Accordion for Achievements
+ * 9. NEW: Starry Background
  */
 
 (function () {
@@ -215,6 +216,33 @@
     });
   }
 
+  // --- 8. NEW: ACCORDION SCRIPT ---
+  function initAccordion() {
+    const accordionButtons = document.querySelectorAll(".accordion-button");
+
+    accordionButtons.forEach(button => {
+      button.addEventListener("click", () => {
+        // Toggle the .active class on the button
+        button.classList.toggle("active");
+
+        // Find the content panel
+        const content = button.nextElementSibling;
+        
+        // Toggle the .open class on the content
+        content.classList.toggle("open");
+
+        // CRITICAL FIX: Update Locomotive Scroll
+        // We add a small delay to let the animation finish
+        setTimeout(() => {
+          if (locoScroll) {
+            locoScroll.update();
+          }
+        }, 500); // 500ms matches the CSS transition
+      });
+    });
+  }
+
+
   // --- INITIALIZE ALL FUNCTIONS ---
 
   window.addEventListener('load', () => {
@@ -223,6 +251,7 @@
       initCursorFollower();
       initMobileNav();
       initScrollAnimations();
+      initAccordion(); // <-- NEW: We call the accordion function
       // initHeroAnimations() is called by the preloader
 
       // --- FIX FOR MISSING CONTENT ---
@@ -236,4 +265,97 @@
       // --- END OF FIX ---
   });
 
-})();
+  /*
+  ==================================
+    NEW "INSANE" STAR BACKGROUND SCRIPT
+    (This is the Vanilla JS version of the React code)
+  ==================================
+  */
+  document.addEventListener("DOMContentLoaded", () => {
+
+    const canvas = document.getElementById("stars-canvas");
+    if (!canvas) return; // Exit if canvas isn't found
+
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return; // Exit if context can't be created
+
+    // --- Settings (You can change these) ---
+    const starDensity = 0.00015;
+    const minTwinkleSpeed = 0.5;
+    const maxTwinkleSpeed = 1;
+    const twinkleProbability = 0.7;
+    const allStarsTwinkle = true;
+    // ------------------------------------
+
+    let stars = [];
+    let animationFrameId;
+
+    function generateStars(width, height) {
+      const area = width * height;
+      const numStars = Math.floor(area * starDensity);
+      const newStars = [];
+      for (let i = 0; i < numStars; i++) {
+        const shouldTwinkle = allStarsTwinkle || Math.random() < twinkleProbability;
+        newStars.push({
+          x: Math.random() * width,
+          y: Math.random() * height,
+          radius: Math.random() * 0.05 + 0.5,
+          opacity: Math.random() * 0.5 + 0.5,
+          twinkleSpeed: shouldTwinkle
+            ? minTwinkleSpeed + Math.random() * (maxTwinkleSpeed - minTwinkleSpeed)
+            : null,
+        });
+      }
+      return newStars;
+    }
+
+    function render() {
+      if (!canvas) return; // Add a check
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      stars.forEach((star) => {
+        ctx.beginPath();
+        ctx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(255, 255, 255, ${star.opacity})`;
+        ctx.fill();
+
+        if (star.twinkleSpeed !== null) {
+          star.opacity = 0.5 + Math.abs(Math.sin((Date.now() * 0.001) / star.twinkleSpeed) * 0.5);
+        }
+      });
+      animationFrameId = requestAnimationFrame(render);
+    }
+
+    function updateStars() {
+      if (!canvas) return; // Add a check
+      const { width, height } = canvas.getBoundingClientRect();
+      
+      if (width === 0 || height === 0) return; // Don't run if hidden
+      
+      canvas.width = width;
+      canvas.height = height;
+      stars = generateStars(width, height);
+      
+      // If render isn't running, start it
+      if (!animationFrameId) {
+        render();
+      }
+    }
+
+    // Set initial size
+    updateStars();
+
+    // Re-run the star generator when the window resizes
+    const resizeObserver = new ResizeObserver(updateStars);
+    resizeObserver.observe(canvas);
+    
+    // Also clean up the animation when the page is unloaded
+    window.addEventListener("beforeunload", () => {
+      cancelAnimationFrame(animationFrameId);
+      if (canvas) {
+        resizeObserver.unobserve(canvas);
+      }
+    });
+
+  });
+
+})(); // The original file's closing bracket
