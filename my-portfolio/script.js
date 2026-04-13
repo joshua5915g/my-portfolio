@@ -114,31 +114,43 @@
 
   function initCursorFollower() {
     const cursor = document.querySelector(".cursor-follower");
+    const interactiveElements = document.querySelectorAll("a, button, .btn, .course-item, .project-link, .accordion-button, .nav-links a, .contact-socials a");
+    let mouseX = window.innerWidth / 2;
+    let mouseY = window.innerHeight / 2;
+    let currentX = mouseX;
+    let currentY = mouseY;
+    const speed = 0.35; // Used only for the update loop, but mousemove snaps immediately
+
+    function updateCursor() {
+      currentX += (mouseX - currentX) * speed;
+      currentY += (mouseY - currentY) * speed;
+      cursor.style.transform = `translate(${currentX}px, ${currentY}px)`;
+      requestAnimationFrame(updateCursor);
+    }
 
     window.addEventListener("mousemove", (e) => {
-      gsap.to(cursor, {
-        duration: 0.3,
-        x: e.clientX,
-        y: e.clientY,
-        ease: "power3.out",
-      });
+      mouseX = e.clientX;
+      mouseY = e.clientY;
+      currentX = mouseX;
+      currentY = mouseY;
+      cursor.style.transform = `translate(${mouseX}px, ${mouseY}px)`;
+      cursor.style.opacity = "1";
     });
 
-    // Hide cursor on body leave
+    interactiveElements.forEach((element) => {
+      element.addEventListener("mouseenter", () => cursor.classList.add("cursor-hover"));
+      element.addEventListener("mouseleave", () => cursor.classList.remove("cursor-hover"));
+    });
+
     document.body.addEventListener("mouseleave", () => {
-      gsap.to(cursor, {
-        duration: 0.3,
-        opacity: 0,
-      });
+      cursor.style.opacity = "0";
     });
 
-    // Show cursor on body enter
     document.body.addEventListener("mouseenter", () => {
-      gsap.to(cursor, {
-        duration: 0.3,
-        opacity: 1,
-      });
+      cursor.style.opacity = "1";
     });
+
+    updateCursor();
   }
 
   // --- 5. MOBILE NAVIGATION TOGGLE ---
@@ -242,6 +254,79 @@
     });
   }
 
+  // --- 9. NEW: COURSE CERTIFICATE POPUP ---
+  function initCertificatePopup() {
+    const modal = document.getElementById("certificateModal");
+    const backdrop = document.getElementById("certificateBackdrop");
+    const closeButton = document.getElementById("certificateClose");
+    const title = document.getElementById("certificateTitle");
+    const provider = document.getElementById("certificateProvider");
+    const date = document.getElementById("certificateDate");
+    const description = document.getElementById("certificateDescription");
+    const action = document.getElementById("certificateAction");
+    const titleCard = document.getElementById("certificateTitleCard");
+    const providerCard = document.getElementById("certificateProviderCard");
+    const dateCard = document.getElementById("certificateDateCard");
+    const certificateImage = document.getElementById("certificateImage");
+    const certificateThumbnail = document.getElementById("certificateThumbnail");
+    const items = document.querySelectorAll(".course-item");
+
+    function openModal(data) {
+      title.textContent = data.course || "Certificate Preview";
+      provider.textContent = data.provider ? `Provider: ${data.provider}` : "Provider: Online Training";
+      date.textContent = data.date ? `Issued: ${data.date}` : "Issued: Present";
+      description.textContent = data.description || "This certificate was earned for completing the selected course.";
+      titleCard.textContent = data.course || "Credential";
+      providerCard.textContent = data.provider || "Verified Achievement";
+      dateCard.textContent = data.date || "2025";
+
+      if (data.image) {
+        certificateImage.src = data.image;
+        certificateImage.alt = `${data.course} certificate image`;
+        certificateThumbnail.style.display = "block";
+      } else {
+        certificateThumbnail.style.display = "none";
+      }
+
+      if (data.link && data.link !== "#") {
+        action.href = data.link;
+        action.style.display = "inline-flex";
+      } else if (data.image) {
+        action.href = data.image;
+        action.style.display = "inline-flex";
+      } else {
+        action.style.display = "none";
+      }
+
+      modal.classList.add("active");
+      document.body.classList.add("no-scroll");
+    }
+
+    function closeModal() {
+      modal.classList.remove("active");
+      document.body.classList.remove("no-scroll");
+    }
+
+    items.forEach((item) => {
+      item.addEventListener("click", () => openModal(item.dataset));
+      item.addEventListener("keydown", (event) => {
+        if (event.key === "Enter" || event.key === " ") {
+          event.preventDefault();
+          openModal(item.dataset);
+        }
+      });
+    });
+
+    closeButton.addEventListener("click", closeModal);
+    backdrop.addEventListener("click", closeModal);
+
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape" && modal.classList.contains("active")) {
+        closeModal();
+      }
+    });
+  }
+
 
   // --- INITIALIZE ALL FUNCTIONS ---
 
@@ -252,6 +337,7 @@
       initMobileNav();
       initScrollAnimations();
       initAccordion(); // <-- NEW: We call the accordion function
+      initCertificatePopup();
       // initHeroAnimations() is called by the preloader
 
       // --- FIX FOR MISSING CONTENT ---
