@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Joshua Jose - Resume | Cybersecurity & AI Student</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --font-heading: "Poppins", sans-serif;
+      --font-body: "Inter", sans-serif;
+      --color-bg: #0a0a0a;
+      --color-text: #eaeaea;
+      --color-text-muted: #a0a0a0;
+      --color-primary: #ffffff;
+      --color-border: #333333;
+    }
+
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: var(--font-body);
+      background-color: var(--color-bg);
+      color: var(--color-text);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      cursor: none;
+    }
+
+    /* CUSTOM CURSOR */
+    .cursor-follower {
+      position: fixed;
+      width: 20px;
+      height: 20px;
+      border: 1px solid var(--color-primary);
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+      z-index: 999;
+      transition: width 0.3s ease, height 0.3s ease, background-color 0.3s ease;
+    }
+
+    body:has(a:hover) .cursor-follower,
+    body:has(button:hover) .cursor-follower {
+      width: 60px;
+      height: 60px;
+      background-color: var(--color-primary);
+      mix-blend-mode: difference;
+      border: none;
+    }
+
+    /* Hide default cursor for all interactive elements */
+    a,
+    button,
+    .btn,
+    iframe {
+      cursor: none !important;
+    }
+
+    /* HEADER */
+    .header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      z-index: 100;
+      padding: 2rem 0;
+      border-bottom: 1px solid var(--color-border);
+      background: rgba(10, 10, 10, 0.95);
+      -webkit-backdrop-filter: blur(10px);
+      backdrop-filter: blur(10px);
+    }
+
+    .header-container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 0 2.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo a {
+      font-family: var(--font-heading);
+      font-weight: 600;
+      font-size: 1.2rem;
+      color: var(--color-primary);
+      text-decoration: none;
+    }
+
+    .logo span {
+      font-family: var(--font-body);
+      font-weight: 400;
+      font-size: 0.9rem;
+      color: var(--color-text-muted);
+      margin-left: 0.5rem;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2.5rem;
+      align-items: center;
+    }
+
+    .nav-links a {
+      font-family: var(--font-body);
+      font-size: 0.95rem;
+      color: var(--color-text);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      text-decoration: none;
+      transition: color 0.3s ease;
+    }
+
+    .nav-links a:hover {
+      color: var(--color-primary);
+    }
+
+    .nav-links a.nav-cta {
+      border: 1px solid var(--color-border);
+      padding: 0.5rem 1rem;
+      border-radius: 2rem;
+      transition: all 0.3s ease;
+    }
+
+    .nav-links a.nav-cta:hover {
+      background-color: var(--color-primary);
+      color: var(--color-bg);
+      border-color: var(--color-primary);
+    }
+
+    /* MAIN CONTENT */
+    main {
+      margin-top: 100px;
+      min-height: calc(100vh - 100px);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .resume-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 4rem 2.5rem;
+      width: 100%;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .resume-header {
+      margin-bottom: 3rem;
+      animation: slideUp 0.8s ease-out;
+    }
+
+    @keyframes slideUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .resume-header h1 {
+      font-family: var(--font-heading);
+      font-size: 3.5rem;
+      font-weight: 700;
+      color: var(--color-primary);
+      margin-bottom: 1rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .resume-header p {
+      font-size: 1.2rem;
+      color: var(--color-text-muted);
+      margin-bottom: 2rem;
+      max-width: 600px;
+    }
+
+    .resume-actions {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 3rem;
+    }
+
+    .btn {
+      font-family: var(--font-body);
+      font-size: 1rem;
+      font-weight: 600;
+      padding: 1rem 2rem;
+      border-radius: 4px;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      cursor: pointer;
+      border: none;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .btn-primary {
+      background-color: var(--color-primary);
+      color: var(--color-bg);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 30px rgba(255, 255, 255, 0.1);
+    }
+
+    .btn-secondary {
+      border: 1px solid var(--color-border);
+      color: var(--color-primary);
+      background: transparent;
+    }
+
+    .btn-secondary:hover {
+      background-color: var(--color-primary);
+      color: var(--color-bg);
+      border-color: var(--color-primary);
+    }
+
+    .resume-info {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 2rem;
+      margin-bottom: 3rem;
+    }
+
+    .info-card {
+      border: 1px solid var(--color-border);
+      padding: 1.5rem;
+      border-radius: 8px;
+      background-color: #0c0c0c;
+      transition: all 0.3s ease;
+    }
+
+    .info-card:hover {
+      border-color: var(--color-primary);
+      transform: translateY(-5px);
+    }
+
+    .info-card h3 {
+      font-family: var(--font-heading);
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: var(--color-primary);
+      margin-bottom: 0.5rem;
+    }
+
+    .info-card p {
+      font-size: 1rem;
+      color: var(--color-text-muted);
+      line-height: 1.6;
+    }
+
+    /* PDF VIEWER */
+    .pdf-viewer-container {
+      border: 1px solid var(--color-border);
+      border-radius: 8px;
+      overflow: hidden;
+      background-color: #0c0c0c;
+      margin-bottom: 3rem;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+      animation: fadeIn 1s ease-out 0.3s both;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
+      }
+    }
+
+    .pdf-viewer-container iframe {
+      width: 100%;
+      height: 75vh;
+      border: none;
+      display: block;
+    }
+
+    /* FOOTER */
+    .footer {
+      padding: 3rem 2.5rem;
+      text-align: center;
+      border-top: 1px solid var(--color-border);
+      background-color: #0c0c0c;
+      margin-top: auto;
+    }
+
+    .footer p {
+      font-size: 0.95rem;
+      color: var(--color-text-muted);
+      margin-bottom: 0.5rem;
+    }
+
+    .footer-love {
+      font-size: 0.9rem;
+      color: var(--color-text-muted);
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 768px) {
+      .header-container {
+        padding: 0 1.5rem;
+      }
+
+      .nav-links {
+        gap: 1rem;
+      }
+
+      .nav-links a {
+        font-size: 0.8rem;
+      }
+
+      .resume-header h1 {
+        font-size: 2.5rem;
+      }
+
+      .resume-header p {
+        font-size: 1rem;
+      }
+
+      .resume-actions {
+        flex-direction: column;
+      }
+
+      .btn {
+        width: 100%;
+        justify-content: center;
+      }
+
+      .resume-info {
+        grid-template-columns: 1fr;
+      }
+
+      .pdf-viewer-container iframe {
+        height: 50vh;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .header {
+        padding: 1rem 0;
+      }
+
+      .logo a {
+        font-size: 1rem;
+      }
+
+      .nav-links {
+        gap: 0.5rem;
+      }
+
+      .nav-links a {
+        font-size: 0.7rem;
+        display: none;
+      }
+
+      .nav-links a.nav-cta {
+        display: inline-block;
+      }
+
+      .resume-container {
+        padding: 2rem 1rem;
+        margin-top: 80px;
+      }
+
+      .resume-header h1 {
+        font-size: 1.8rem;
+      }
+
+      .resume-header p {
+        font-size: 0.9rem;
+      }
+
+      .pdf-viewer-container iframe {
+        height: 40vh;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- CUSTOM CURSOR -->
+  <div class="cursor-follower"></div>
+
+  <!-- HEADER -->
+  <header class="header">
+    <div class="header-container">
+      <div class="logo">
+        <a href="index.html">Joshua Jose <span>Portfolio'26</span></a>
+      </div>
+      <nav class="nav-links">
+        <a href="index.html">Back to Portfolio</a>
+        <a href="index.html#contact" class="nav-cta">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- MAIN CONTENT -->
+  <main>
+    <div class="resume-container">
+      <!-- RESUME HEADER -->
+      <div class="resume-header">
+        <h1>My Resume</h1>
+        <p>A comprehensive overview of my skills, experience, and qualifications in Cybersecurity and AI.</p>
+      </div>
+
+      <!-- ACTION BUTTONS -->
+      <div class="resume-actions">
+        <a href="index.html#contact" class="btn btn-secondary">Get In Touch</a>
+      </div>
+
+      <!-- RESUME INFO CARDS -->
+      <div class="resume-info">
+        <div class="info-card">
+          <h3>🎓 Education</h3>
+          <p>Dedicated student pursuing expertise in Cybersecurity and Artificial Intelligence with hands-on experience in ethical hacking and AI model development.</p>
+        </div>
+        <div class="info-card">
+          <h3>💻 Core Skills</h3>
+          <p>AI/ML, Cloud Infrastructure, Cybersecurity, Penetration Testing, Generative AI Tools, and Software Engineering.</p>
+        </div>
+        <div class="info-card">
+          <h3>🏆 Achievements</h3>
+          <p>IBM AI Developer Certification, Oracle Cloud Training, Generative AI Mastery, and Intel Corporation Recognition.</p>
+        </div>
+      </div>
+
+      <!-- PDF VIEWER -->
+      <div class="pdf-viewer-container" id="pdfViewer">
+        <iframe src="resume.pdf#toolbar=0&navpanes=0&scrollbar=0" title="Joshua Jose Resume PDF" allowfullscreen="false" allow=""></iframe>
+      </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+      <p>Architecting secure futures.</p>
+      <p class="footer-love">© 2026 Joshua Jose. All rights reserved</p>
+    </footer>
+  </main>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script>
+    // CUSTOM CURSOR FOLLOWER
+    function initCursorFollower() {
+      const cursor = document.querySelector('.cursor-follower');
+      let mouseX = window.innerWidth / 2;
+      let mouseY = window.innerHeight / 2;
+      let currentX = mouseX;
+      let currentY = mouseY;
+      const speed = 0.35;
+
+      function updateCursor() {
+        currentX += (mouseX - currentX) * speed;
+        currentY += (mouseY - currentY) * speed;
+        cursor.style.transform = `translate(${currentX}px, ${currentY}px)`;
+        requestAnimationFrame(updateCursor);
+      }
+
+      window.addEventListener('mousemove', (e) => {
+        mouseX = e.clientX;
+        mouseY = e.clientY;
+        currentX = mouseX;
+        currentY = mouseY;
+        cursor.style.transform = `translate(${mouseX}px, ${mouseY}px)`;
+        cursor.style.opacity = '1';
+      });
+
+      document.body.addEventListener('mouseleave', () => {
+        cursor.style.opacity = '0';
+      });
+
+      document.body.addEventListener('mouseenter', () => {
+        cursor.style.opacity = '1';
+      });
+
+      updateCursor();
+    }
+
+    // Initialize cursor follower
+    initCursorFollower();
+
+    // Prevent right-click, copy, and save on PDF viewer
+    const pdfViewer = document.getElementById('pdfViewer');
+    
+    pdfViewer.addEventListener('contextmenu', (e) => {
+      e.preventDefault();
+      return false;
+    });
+
+    // Prevent keyboard shortcuts for saving/printing
+    document.addEventListener('keydown', (e) => {
+      // Block Ctrl+S (Save)
+      if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+        e.preventDefault();
+        return false;
+      }
+      // Block Ctrl+P (Print)
+      if ((e.ctrlKey || e.metaKey) && e.key === 'p') {
+        e.preventDefault();
+        return false;
+      }
+    });
+
+    // Disable drag and drop
+    pdfViewer.addEventListener('dragstart', (e) => {
+      e.preventDefault();
+      return false;
+    });
+  </script>
+</html>
