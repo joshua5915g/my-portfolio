@@ -15,6 +15,8 @@
 (function () {
   // --- 1. PRELOADER ANIMATION ---
 
+  let pageLoaded = false;
+
   function initPreloader() {
     const preloader = document.querySelector(".preloader");
     const counterElement = document.querySelector(".preloader-counter");
@@ -25,30 +27,37 @@
 
     // Animate counter
     let counterInterval = setInterval(() => {
+      if (pageLoaded) {
+        count += 5; // Fast forward to completion when loaded
+      } else if (count < 85) {
+        count += 1; // Normal speed while loading, caps at 85% until load event
+      }
+
       if (count >= target) {
+        count = target;
         clearInterval(counterInterval);
 
-        // All animations complete, now fade out preloader
+        // All animations complete, now fade out preloader (snappy transitions)
         const tl = gsap.timeline();
         tl.to(preloaderText, {
-          y: -100,
+          y: -50,
           opacity: 0,
-          duration: 0.8,
+          duration: 0.4,
           ease: "power2.inOut",
         })
           .to(
             counterElement,
             {
-              y: -100,
+              y: -50,
               opacity: 0,
-              duration: 0.8,
+              duration: 0.4,
               ease: "power2.inOut",
             },
-            "-=0.5"
+            "-=0.3"
           )
           .to(preloader, {
             yPercent: -100,
-            duration: 1.2,
+            duration: 0.8,
             ease: "power3.inOut",
             onComplete: () => {
               preloader.style.display = "none";
@@ -56,11 +65,10 @@
               initHeroAnimations(); // Start hero animations after preloader
             },
           });
-      } else {
-        count++;
-        counterElement.textContent = `${count}%`;
       }
-    }, 20); // Adjust interval for speed
+
+      counterElement.textContent = `${count}%`;
+    }, 10); // Shorter interval (10ms) for smoother count-up
   }
 
   // --- 2. LOCOMOTIVE SCROLL INITIALIZATION ---
@@ -68,8 +76,11 @@
   let locoScroll;
 
   function initSmoothScroll() {
+    const scrollContainer = document.querySelector("[data-scroll-container]");
+    if (!scrollContainer) return;
+
     locoScroll = new LocomotiveScroll({
-      el: document.querySelector("[data-scroll-container]"),
+      el: scrollContainer,
       smooth: true,
       lerp: 0.08, // Controls the "smoothness"
       smartphone: {
@@ -100,9 +111,49 @@
           height: window.innerHeight,
         };
       },
-      pinType: document.querySelector("[data-scroll-container]").style.transform
+      pinType: scrollContainer.style.transform
         ? "transform"
         : "fixed",
+    });
+
+    // Dynamic height calculation on container element resizing
+    const resizeObserver = new ResizeObserver(() => {
+      if (locoScroll) {
+        locoScroll.update();
+        ScrollTrigger.refresh();
+      }
+    });
+    resizeObserver.observe(scrollContainer);
+
+    // Anchor Link Smooth Scroll Interceptor
+    const anchorLinks = document.querySelectorAll('a[href^="#"]');
+    anchorLinks.forEach(link => {
+      link.addEventListener("click", (e) => {
+        const href = link.getAttribute("href");
+        if (href.startsWith("#")) {
+          e.preventDefault();
+          if (href === "#" || href === "#top") {
+            locoScroll.scrollTo(0);
+          } else {
+            const targetElement = document.querySelector(href);
+            if (targetElement) {
+              // Close mobile menu if active
+              const hamburger = document.querySelector(".hamburger-menu");
+              const navLinks = document.querySelector(".nav-links");
+              if (hamburger && navLinks) {
+                hamburger.classList.remove("active");
+                navLinks.classList.remove("active");
+              }
+              // Scroll to target element
+              locoScroll.scrollTo(targetElement, {
+                offset: 0,
+                duration: 1000,
+                easing: [0.25, 0.0, 0.35, 1.0]
+              });
+            }
+          }
+        }
+      });
     });
 
     // Refresh ScrollTrigger and LocomotiveScroll on window resize or updates
@@ -119,7 +170,7 @@
     let mouseY = window.innerHeight / 2;
     let currentX = mouseX;
     let currentY = mouseY;
-    const speed = 0.35; // Used only for the update loop, but mousemove snaps immediately
+    const speed = 0.75; // Snappy tracking (75% distance covered per frame)
 
     function updateCursor() {
       currentX += (mouseX - currentX) * speed;
@@ -131,9 +182,6 @@
     window.addEventListener("mousemove", (e) => {
       mouseX = e.clientX;
       mouseY = e.clientY;
-      currentX = mouseX;
-      currentY = mouseY;
-      cursor.style.transform = `translate(${mouseX}px, ${mouseY}px)`;
       cursor.style.opacity = "1";
     });
 
@@ -326,19 +374,260 @@
       }
     });
   }
+  
+  // --- 10. AI CHATBOT WIDGET LOGIC ---
 
+  function initChatbot() {
+    const trigger = document.getElementById("chatbotTrigger");
+    const box = document.getElementById("chatbotBox");
+    const tooltip = document.getElementById("chatbotTooltip");
+    const closeBtn = document.getElementById("chatbotCloseBtn");
+    const settingsBtn = document.getElementById("chatbotSettingsBtn");
+    const settings = document.getElementById("chatbotSettings");
+    const apiKeyInput = document.getElementById("chatbotApiKeyInput");
+    const saveKeyBtn = document.getElementById("chatbotSaveKeyBtn");
+    const keyStatus = document.getElementById("chatbotKeyStatus");
+    const messages = document.getElementById("chatbotMessages");
+    const input = document.getElementById("chatbotInput");
+    const sendBtn = document.getElementById("chatbotSendBtn");
+    const suggestions = document.querySelectorAll(".suggestion-chip");
+    const notificationDot = document.querySelector(".chatbot-notification-dot");
+
+    // Load key from storage on startup
+    let geminiApiKey = sessionStorage.getItem("chatbot_gemini_key") || "";
+    if (geminiApiKey) {
+      apiKeyInput.value = geminiApiKey;
+      keyStatus.textContent = "Gemini Live Mode Active.";
+    }
+
+    // Toggle Chat Panel
+    trigger.addEventListener("click", () => {
+      box.classList.toggle("active");
+      if (box.classList.contains("active")) {
+        box.setAttribute("aria-hidden", "false");
+        if (notificationDot) {
+          notificationDot.style.display = "none"; // Hide notification dot
+        }
+        if (tooltip) {
+          tooltip.classList.remove("active"); // Permanently hide the tooltip hint
+        }
+        // Auto focus input on desktops
+        setTimeout(() => input.focus(), 300);
+      } else {
+        box.setAttribute("aria-hidden", "true");
+      }
+    });
+
+    // Close Panel
+    closeBtn.addEventListener("click", () => {
+      box.classList.remove("active");
+      box.setAttribute("aria-hidden", "true");
+    });
+
+    // Auto-open chatbot tooltip hint after page load with a delay (3 seconds after preloader finishes)
+    setTimeout(() => {
+      if (tooltip && !box.classList.contains("active")) {
+        tooltip.classList.add("active");
+      }
+    }, 3000);
+
+    // Toggle Settings Panel
+    settingsBtn.addEventListener("click", () => {
+      settings.classList.toggle("active");
+    });
+
+    // Save Gemini Key
+    saveKeyBtn.addEventListener("click", () => {
+      const value = apiKeyInput.value.trim();
+      if (value) {
+        sessionStorage.setItem("chatbot_gemini_key", value);
+        geminiApiKey = value;
+        keyStatus.textContent = "Gemini Live Mode Active.";
+        addBotMessage("Developer mode enabled. I am now connected live to Gemini!");
+      } else {
+        sessionStorage.removeItem("chatbot_gemini_key");
+        geminiApiKey = "";
+        keyStatus.textContent = "Using offline knowledge base.";
+        addBotMessage("Gemini key cleared. Switched back to offline knowledge base.");
+      }
+      settings.classList.remove("active");
+    });
+
+    // Send Message on Enter
+    input.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") {
+        sendMessage();
+      }
+    });
+
+    sendBtn.addEventListener("click", sendMessage);
+
+    // Click Suggestion Chips
+    suggestions.forEach(chip => {
+      chip.addEventListener("click", () => {
+        const query = chip.dataset.query;
+        if (query) {
+          addUserMessage(query);
+          generateResponse(query);
+        }
+      });
+    });
+
+    function sendMessage() {
+      const query = input.value.trim();
+      if (!query) return;
+
+      addUserMessage(query);
+      input.value = "";
+      generateResponse(query);
+    }
+
+    function addUserMessage(text) {
+      const messageDiv = document.createElement("div");
+      messageDiv.className = "chat-message user";
+      messageDiv.innerHTML = `<div class="message-bubble">${escapeHTML(text)}</div>`;
+      messages.appendChild(messageDiv);
+      scrollToBottom();
+    }
+
+    function addBotMessage(text) {
+      const messageDiv = document.createElement("div");
+      messageDiv.className = "chat-message bot";
+      messageDiv.innerHTML = `<div class="message-bubble">${text}</div>`;
+      messages.appendChild(messageDiv);
+      scrollToBottom();
+    }
+
+    function showTypingIndicator() {
+      const indicatorDiv = document.createElement("div");
+      indicatorDiv.className = "chat-message bot typing-container";
+      indicatorDiv.innerHTML = `
+        <div class="message-bubble typing-indicator">
+          <span class="typing-dot"></span>
+          <span class="typing-dot"></span>
+          <span class="typing-dot"></span>
+        </div>
+      `;
+      messages.appendChild(indicatorDiv);
+      scrollToBottom();
+      return indicatorDiv;
+    }
+
+    function scrollToBottom() {
+      messages.scrollTop = messages.scrollHeight;
+    }
+
+    function escapeHTML(str) {
+      return str.replace(/[&<>'"]/g, 
+        tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag] || tag)
+      );
+    }
+
+    // Generate Response
+    async function generateResponse(userQuery) {
+      const indicator = showTypingIndicator();
+
+      // Delay to simulate human-like response parsing
+      setTimeout(async () => {
+        // Remove typing indicator
+        if (indicator && indicator.parentNode) {
+          indicator.parentNode.removeChild(indicator);
+        }
+
+        if (geminiApiKey) {
+          // Live Gemini Request
+          try {
+            const response = await fetch(
+              `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${geminiApiKey}`,
+              {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                  contents: [
+                    {
+                      role: "user",
+                      parts: [{ text: userQuery }]
+                    }
+                  ],
+                  systemInstruction: {
+                    parts: [{ text: "You are a professional AI Assistant for Joshua Jose's portfolio website. Act friendly, professional, and knowledgeable about Joshua Jose. Keep answers concise, in bullet points or short paragraphs. Joshua's background: 20-year-old from Kerala, India, completed Plus Two CS, runs e-services digital communications business, church piano player, certified by IBM (AI Developer) and Oracle (OCI Foundations), interested in cybersecurity, built 'The Walls Will Fall' AI film and a React Personal Finance Tracker. If asked about unrelated topics, politely redirect back to Joshua's portfolio." }]
+                  }
+                })
+              }
+            );
+
+            if (!response.ok) {
+              throw new Error("API call failed");
+            }
+
+            const data = await response.json();
+            const text = data.candidates[0].content.parts[0].text;
+            addBotMessage(formatMarkdown(text));
+          } catch (error) {
+            console.error(error);
+            addBotMessage("Oops! I failed to reach Gemini. Please verify your API Key or connection in ⚙️ settings. Falling back to offline knowledge base...");
+            respondOffline(userQuery);
+          }
+        } else {
+          // Offline rule-based matching
+          respondOffline(userQuery);
+        }
+      }, 1000);
+    }
+
+    function respondOffline(query) {
+      const cleanQuery = query.toLowerCase().trim();
+      let reply = "";
+
+      if (cleanQuery.includes("hello") || cleanQuery.includes("hi") || cleanQuery.includes("hey") || cleanQuery.includes("who are you") || cleanQuery.includes("about") || cleanQuery.includes("joshua") || cleanQuery.includes("josh")) {
+        reply = "I am Joshua's personal AI assistant! I can help you learn more about his Computer Science background, e-service business, portfolio projects, certifications, or piano playing. Ask me anything!";
+      } else if (cleanQuery.includes("project") || cleanQuery.includes("experiment") || cleanQuery.includes("work") || cleanQuery.includes("portfolio") || cleanQuery.includes("veo") || cleanQuery.includes("suno") || cleanQuery.includes("miracle") || cleanQuery.includes("walls") || cleanQuery.includes("finance")) {
+        reply = "Joshua has worked on three major experiments:<br><br>1. **'The Walls Will Fall' (2025)**: A cinematic generative AI film using Veo 3, Suno AI, and Microsoft Editor.<br>2. **'The True Red Sea Miracle' (2026)**: Pushing prolonged physics-defying generative environments.<br>3. **'Personal Finance Tracker' (2026)**: A complete React and Node.js web application for budget management.<br><br>Scroll to the **Projects** section to view them!";
+      } else if (cleanQuery.includes("skill") || cleanQuery.includes("coding") || cleanQuery.includes("python") || cleanQuery.includes("html") || cleanQuery.includes("programming") || cleanQuery.includes("experience") || cleanQuery.includes("language")) {
+        reply = "Joshua is fluent in Computer Science fundamentals, programming logic, basic Python, and Web Development (HTML/CSS/JS). He also excels in applied AI workflows, prompt design, and managing his e-service digital communications business handling client data and transactions.";
+      } else if (cleanQuery.includes("certification") || cleanQuery.includes("credential") || cleanQuery.includes("achievement") || cleanQuery.includes("course") || cleanQuery.includes("oracle") || cleanQuery.includes("ibm") || cleanQuery.includes("intel")) {
+        reply = "Joshua holds several high-level credentials:<br><br>- **IBM AI Developer Professional Certificate**: 10 completed courses including Software Engineering, Python, Flask, and Generative AI Applications.<br>- **Oracle Cloud**: Certified AI Foundations Associate (2025).<br>- **Generative AI MASTER MIND**: AI Fundamentals and Deep Learning.<br>- **Intel Corporation**: AI Appreciate and AI Aware Badges.<br><br>Click on items in the **Achievements** section to see details!";
+      } else if (cleanQuery.includes("contact") || cleanQuery.includes("hire") || cleanQuery.includes("email") || cleanQuery.includes("social") || cleanQuery.includes("linkedin") || cleanQuery.includes("github") || cleanQuery.includes("x") || cleanQuery.includes("twitter")) {
+        reply = "You can easily connect with Joshua!<br><br>- **LinkedIn**: <a href='https://www.linkedin.com/in/joshua-jose-466975371/' target='_blank' rel='noopener noreferrer'>View Profile</a><br>- **GitHub**: <a href='https://github.com/joshua5915g' target='_blank' rel='noopener noreferrer'>joshua5915g</a><br>- **X**: <a href='https://x.com/Profess57176192' target='_blank' rel='noopener noreferrer'>@Profess57176192</a><br><br>You can also find direct social links at the **Contact** section at the bottom of the page.";
+      } else if (cleanQuery.includes("piano") || cleanQuery.includes("music") || cleanQuery.includes("church") || cleanQuery.includes("hobby") || cleanQuery.includes("kerala") || cleanQuery.includes("india") || cleanQuery.includes("fact")) {
+        reply = "Fun Fact: Joshua is a 20-year-old from Kerala, India. When he is not coding or managing digital operations, he is the piano player at his local church! He has a strong interest in understanding computing foundations, cybersecurity, and stripping away system abstractions.";
+      } else if (cleanQuery.includes("cybersecurity") || cleanQuery.includes("security") || cleanQuery.includes("future")) {
+        reply = "Joshua is passionate about cybersecurity and computing systems. Having run an e-service business handling client data, he has seen firsthand how critical secure, robust, and well-architected systems are, which drives his desire to study cybersecurity in university.";
+      } else {
+        reply = "That's an interesting question! While my offline knowledge base is specifically configured for Joshua's skills, projects, certifications, and background, you can ask me things like 'What certifications do you have?' or 'Tell me about the piano playing'. Or, toggle the ⚙️ settings to paste a Google Gemini API Key for a live, open-ended conversation!";
+      }
+
+      addBotMessage(reply);
+    }
+
+    function formatMarkdown(text) {
+      return text
+        .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+        .replace(/\*(.*?)\*/g, '<em>$1</em>')
+        .replace(/`([^`]+)`/g, '<code>$1</code>')
+        .replace(/\n/g, '<br>')
+        .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" rel="noopener noreferrer">$1</a>');
+    }
+  }
 
   // --- INITIALIZE ALL FUNCTIONS ---
 
-  window.addEventListener('load', () => {
-      initPreloader();
+  // Start preloader animation immediately upon script execution
+  initPreloader();
+
+  function handlePageLoad() {
+      if (pageLoaded) return; // Ensure it only runs once
+      pageLoaded = true; // Signal the preloader that the page is fully loaded
+      
       initSmoothScroll();
       initCursorFollower();
       initMobileNav();
       initScrollAnimations();
-      initAccordion(); // <-- NEW: We call the accordion function
+      initAccordion(); // Keep fallback accordion capability
       initCertificatePopup();
-      // initHeroAnimations() is called by the preloader
+      initChatbot(); // Initialize chatbot widget
 
       // --- FIX FOR MISSING CONTENT ---
       // This forces the scroll library to re-calculate the page height
@@ -349,7 +638,14 @@
           }
       }, 500); // 500ms delay to be safe
       // --- END OF FIX ---
-  });
+  }
+
+  // Robust check for window 'load' (safeguards against fast cached loads)
+  if (document.readyState === 'complete') {
+      handlePageLoad();
+  } else {
+      window.addEventListener('load', handlePageLoad);
+  }
 
   /*
   ==================================
