@@ -135,22 +135,15 @@
           if (href === "#" || href === "#top") {
             locoScroll.scrollTo(0);
           } else {
-            const targetElement = document.querySelector(href);
-            if (targetElement) {
-              // Close mobile menu if active
-              const hamburger = document.querySelector(".hamburger-menu");
-              const navLinks = document.querySelector(".nav-links");
-              if (hamburger && navLinks) {
-                hamburger.classList.remove("active");
-                navLinks.classList.remove("active");
-              }
-              // Scroll to target element
-              locoScroll.scrollTo(targetElement, {
-                offset: 0,
-                duration: 1000,
-                easing: [0.25, 0.0, 0.35, 1.0]
-              });
+            // Close mobile menu if active
+            const hamburger = document.querySelector(".hamburger-menu");
+            const navLinks = document.querySelector(".nav-links");
+            if (hamburger && navLinks) {
+              hamburger.classList.remove("active");
+              navLinks.classList.remove("active");
             }
+            // Scroll directly using selector string
+            locoScroll.scrollTo(href);
           }
         }
       });
