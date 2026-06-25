@@ -9,7 +9,7 @@
 
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/locomotive-scroll@3.5.4/dist/locomotive-scroll.css">
   
-  <link rel="stylesheet" href="style.css?v=8">
+  <link rel="stylesheet" href="style.css?v=9">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -220,6 +220,43 @@
               </div>
             </div>
           </div>
+          <div class="project-card" data-scroll data-scroll-speed="1">
+            <div class="project-image">
+              <iframe src="https://wattwise-energy.vercel.app/" title="WattWise Solar Intelligence Platform" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen loading="lazy"></iframe>
+            </div>
+            <div class="project-content">
+              <div class="project-header">
+                <h3 class="project-title">"WattWise" (2026)</h3>
+                <a href="https://wattwise-energy.vercel.app/" class="project-link" target="_blank" rel="noopener">View Live App →</a>
+              </div>
+              <p class="project-tagline">A production-ready solar energy analytics dashboard customized for Indian solar panel installations to help users optimize energy consumption, battery storage, and bills.</p>
+              <p class="project-description-intro">
+                Building this took a deep dive into frontend performance and serverless architecture. Core engineering challenges solved:
+              </p>
+              <ul class="project-tool-list">
+                <li><strong>Serverless Optimization:</strong> Refactored the forecasting, AI advice, and weather polling endpoints from a Python backend with heavy ML libraries (pandas, scikit-learn, reaching 973 MB) into native TypeScript / Next.js API Routes, shrinking production deployment sizes to under 10 KB.</li>
+                <li><strong>Interactive UI & SSR:</strong> Solved server-side rendering (SSR) build failures with large visualization tools (plotly.js) by implementing custom Webpack externals and transpiling packages in Next.js configuration.</li>
+                <li><strong>Clean Architecture:</strong> Refactored location-selection dropdowns to be fully responsive and optimized CSS/font preloading using Next.js’s native font optimization tools.</li>
+              </ul>
+              
+              <div class="project-features-container">
+                <p class="features-title">Key Platform Features:</p>
+                <ul class="project-feature-list">
+                  <li>🛰️ <strong>Real-time Weather:</strong> Polling for 70+ Indian cities.</li>
+                  <li>📊 <strong>Dynamic Forecasting:</strong> Solar output and efficiency prediction graphs.</li>
+                  <li>🔋 <strong>Battery Simulator:</strong> Storage optimization and savings calculator.</li>
+                  <li>🧠 <strong>AI Advisor:</strong> Recommends optimal times to run high-load appliances.</li>
+                </ul>
+              </div>
+
+              <div class="project-stack">
+                <span>Next.js</span>
+                <span>TypeScript</span>
+                <span>Serverless API</span>
+                <span>Solar Analytics</span>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </section>
@@ -322,7 +359,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
   
-  <script src="script.js?v=8"></script>
+  <script src="script.js?v=9"></script>
 
   <div class="certificate-modal" id="certificateModal" aria-hidden="true">
     <div class="certificate-modal-backdrop" id="certificateBackdrop"></div>
