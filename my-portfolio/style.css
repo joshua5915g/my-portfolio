@@ -301,15 +301,95 @@ iframe {
   justify-content: center;
   padding: 0 2.5rem;
   padding-top: 10rem;
+  position: relative;
+  overflow: hidden;
+}
+
+/* =========================================
+   CINEMATIC HERO VIDEO BACKGROUND
+========================================= */
+
+.hero-video-wrapper {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 65%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1;
+  overflow: hidden;
+}
+
+.hero-video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+  /* Shift further right AND lower down so face is completely in frame and visible */
+  transform: translate(22%, 60px) scale(1.08);
+  transform-origin: top right;
+  /* Brightness & clarity */
+  filter: contrast(1.1) brightness(1.28) saturate(1.08);
+}
+
+/* Seamless Left Blend to keep text on the left completely legible */
+.hero-video-blend {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  background: linear-gradient(
+    to right,
+    var(--color-bg) 0%,
+    rgba(10, 10, 10, 0.95) 24%,
+    rgba(10, 10, 10, 0.25) 55%,
+    transparent 100%
+  );
+}
+
+/* Bottom fade ONLY - NO top dark shadow on head/face */
+.hero-video-blend::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    transparent 0%,
+    transparent 85%,
+    var(--color-bg) 100%
+  );
+}
+
+/* Dedicated vignette covering bottom-right to eliminate watermark */
+.hero-watermark-cover {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 180px;
+  height: 120px;
+  background: radial-gradient(ellipse at bottom right, var(--color-bg) 40%, rgba(10, 10, 10, 0.8) 65%, transparent 85%);
+  pointer-events: none;
+  z-index: 3;
+}
+
+@media (max-width: 768px) {
+  .hero-video-wrapper {
+    width: 100%;
+    opacity: 0.35;
+  }
+  .hero-video-blend {
+    background: var(--color-bg);
+    opacity: 0.6;
+  }
 }
 
 .hero-title {
   font-family: var(--font-heading);
-  font-size: clamp(3rem, 8vw, 7rem);
+  font-size: clamp(2.5rem, 6vw, 5.5rem);
   font-weight: 700;
-  line-height: 1.1;
+  line-height: 1.08;
   text-transform: uppercase;
   color: var(--color-primary);
+  max-width: 60%;
 }
 
 .hero-title .hero-line {
