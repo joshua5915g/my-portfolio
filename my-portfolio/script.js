@@ -142,8 +142,8 @@
               hamburger.classList.remove("active");
               navLinks.classList.remove("active");
             }
-            // Scroll directly using selector string
-            locoScroll.scrollTo(href);
+            // Scroll with -90px offset so sections never clash under navbar (Locomotive v3 numeric syntax)
+            locoScroll.scrollTo(href, -90);
           }
         }
       });
@@ -605,6 +605,115 @@
     }
   }
 
+  // --- 8b. PROJECT STACK & POP-OUT CARDS ---
+  function initProjectStack() {
+    const projectList = document.querySelector('.project-list');
+    const cards = Array.from(document.querySelectorAll('.project-card'));
+    if (!projectList || !cards.length) return;
+
+    const stackTop = Math.max(80, window.innerHeight * 0.12);
+    const stackStep = 24;
+    
+    let initialTops = [];
+    let listBottom = 0;
+
+    function measurePositions() {
+      const currentScrollY = locoScroll ? locoScroll.scroll.instance.scroll.y : (window.scrollY || window.pageYOffset || 0);
+      
+      cards.forEach(c => {
+        c.style.transform = 'none';
+        c.style.filter = 'none';
+      });
+
+      initialTops = cards.map(c => {
+        const r = c.getBoundingClientRect();
+        return r.top + currentScrollY;
+      });
+
+      const listRect = projectList.getBoundingClientRect();
+      listBottom = listRect.bottom + currentScrollY;
+    }
+
+    function updateStack(scrollTop) {
+      if (!initialTops.length) return;
+
+      const endPin = listBottom - window.innerHeight * 0.45;
+
+      let activeIndex = 0;
+      for (let i = 0; i < cards.length; i++) {
+        const pinStart = initialTops[i] - stackTop - stackStep * i;
+        if (scrollTop >= pinStart) {
+          activeIndex = i;
+        }
+      }
+
+      cards.forEach((card, i) => {
+        const cardTop = initialTops[i];
+        const pinStart = cardTop - stackTop - stackStep * i;
+        const isPinned = scrollTop >= pinStart && scrollTop <= endPin;
+
+        let translateY = 0;
+        if (isPinned) {
+          translateY = scrollTop - cardTop + stackTop + stackStep * i;
+        } else if (scrollTop > endPin) {
+          translateY = endPin - cardTop + stackTop + stackStep * i;
+        }
+
+        let scale = 1;
+        let brightness = 1;
+        let blur = 0;
+
+        if (i < activeIndex) {
+          const depth = activeIndex - i;
+          scale = Math.max(0.86, 1 - depth * 0.042);
+          brightness = Math.max(0.60, 1 - depth * 0.12);
+          blur = Math.min(5, depth * 1.5);
+        } else if (i === activeIndex) {
+          scale = 1;
+          brightness = 1;
+          blur = 0;
+        } else {
+          scale = 1;
+          brightness = 1;
+          blur = 0;
+        }
+
+        if (translateY !== 0 || scale !== 1) {
+          card.style.transform = `translate3d(0, ${Math.round(translateY)}px, 0) scale(${scale.toFixed(3)})`;
+          card.style.filter = blur > 0 ? `blur(${blur.toFixed(1)}px) brightness(${brightness.toFixed(2)})` : `brightness(${brightness.toFixed(2)})`;
+          card.style.zIndex = 10 + i;
+        } else {
+          card.style.transform = '';
+          card.style.filter = '';
+          card.style.zIndex = 10 + i;
+        }
+      });
+    }
+
+    setTimeout(() => {
+      measurePositions();
+      const currentScrollY = locoScroll ? locoScroll.scroll.instance.scroll.y : (window.scrollY || 0);
+      updateStack(currentScrollY);
+    }, 800);
+
+    if (locoScroll) {
+      locoScroll.on('scroll', (args) => {
+        updateStack(args.scroll.y);
+      });
+    }
+
+    window.addEventListener('scroll', () => {
+      const scrollY = locoScroll ? locoScroll.scroll.instance.scroll.y : (window.scrollY || 0);
+      updateStack(scrollY);
+    }, { passive: true });
+
+    window.addEventListener('resize', () => {
+      measurePositions();
+      const scrollY = locoScroll ? locoScroll.scroll.instance.scroll.y : (window.scrollY || 0);
+      updateStack(scrollY);
+    });
+  }
+
   // --- INITIALIZE ALL FUNCTIONS ---
 
   // Start preloader animation immediately upon script execution
@@ -621,6 +730,7 @@
       initAccordion(); // Keep fallback accordion capability
       initCertificatePopup();
       initChatbot(); // Initialize chatbot widget
+      initProjectStack(); // Initialize card stacking & pop-out deck
 
       // --- FIX FOR MISSING CONTENT ---
       // This forces the scroll library to re-calculate the page height
