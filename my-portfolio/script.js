@@ -158,7 +158,7 @@
 
   function initCursorFollower() {
     const cursor = document.querySelector(".cursor-follower");
-    const interactiveElements = document.querySelectorAll("a, button, .btn, .course-item, .project-link, .accordion-button, .nav-links a, .contact-socials a");
+    const interactiveElements = document.querySelectorAll("a, button, .btn, .course-item, .project-link, .accordion-button, .nav-links a, .contact-socials a, .channel-link, .hud-submit-btn");
     let mouseX = window.innerWidth / 2;
     let mouseY = window.innerHeight / 2;
     let currentX = mouseX;
@@ -719,6 +719,69 @@
   // Start preloader animation immediately upon script execution
   initPreloader();
 
+  
+  // --- 10. ESTABLISH HANDSHAKE FORM ---
+  function initContactHandshake() {
+    const handshakeForm = document.getElementById("contactHandshakeForm");
+    if (!handshakeForm) return;
+
+    handshakeForm.addEventListener("submit", function(e) {
+      e.preventDefault();
+      const submitBtn = document.getElementById("handshakeSubmitBtn");
+      const feedbackLog = document.getElementById("hudFeedbackLog");
+      const identityInput = document.getElementById("handshakeIdentity");
+      const returnInput = document.getElementById("handshakeReturn");
+      const payloadInput = document.getElementById("handshakePayload");
+
+      const identity = identityInput.value.trim();
+      const returnEmail = returnInput.value.trim();
+      const payload = payloadInput.value.trim();
+
+      if (!identity || !returnEmail || !payload) {
+        if (feedbackLog) {
+          feedbackLog.className = "hud-feedback-log error";
+          feedbackLog.textContent = "[!] VALIDATION ERROR: ALL PROTOCOL FIELDS REQUIRED";
+        }
+        return;
+      }
+
+      // Simulated Tactical Security Handshake Sequence
+      submitBtn.disabled = true;
+      const originalBtnHTML = submitBtn.innerHTML;
+      submitBtn.innerHTML = '<span class="btn-text">AUTHENTICATING...</span>';
+
+      if (feedbackLog) {
+        feedbackLog.className = "hud-feedback-log processing";
+        feedbackLog.textContent = ">> ENCRYPTING PAYLOAD [256-BIT SECURE CHANNEL]...";
+      }
+
+      setTimeout(() => {
+        if (feedbackLog) {
+          feedbackLog.textContent = ">> TRANSMITTING DISPATCH PACKET TO JOSHUA...";
+        }
+      }, 700);
+
+      setTimeout(() => {
+        submitBtn.innerHTML = '<span class="btn-text">HANDSHAKE CONFIRMED</span> <span class="btn-arrow">&#10003;</span>';
+        if (feedbackLog) {
+          feedbackLog.className = "hud-feedback-log success";
+          feedbackLog.textContent = "[\u2713] PROTOCOL 200: DISPATCH TRANSMITTED. THANK YOU, " + identity.toUpperCase() + ".";
+        }
+
+        setTimeout(() => {
+          handshakeForm.reset();
+          submitBtn.disabled = false;
+          submitBtn.innerHTML = originalBtnHTML;
+          setTimeout(() => {
+            if (feedbackLog && feedbackLog.classList.contains("success")) {
+              feedbackLog.textContent = "";
+            }
+          }, 4000);
+        }, 3000);
+      }, 1600);
+    });
+  }
+
   function handlePageLoad() {
       if (pageLoaded) return; // Ensure it only runs once
       pageLoaded = true; // Signal the preloader that the page is fully loaded
@@ -731,6 +794,7 @@
       initCertificatePopup();
       initChatbot(); // Initialize chatbot widget
       initProjectStack(); // Initialize card stacking & pop-out deck
+      initContactHandshake(); // Initialize Establish Handshake HUD form
 
       // --- FIX FOR MISSING CONTENT ---
       // This forces the scroll library to re-calculate the page height

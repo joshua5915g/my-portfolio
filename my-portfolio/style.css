@@ -401,6 +401,10 @@ iframe {
   display: block;
   opacity: 0;
   transform: translateY(100%);
+  background: linear-gradient(180deg, #ffffff 15%, #e0c8ff 55%, #a855f7 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  padding-bottom: 0.08em;
 }
 
 .hero-subtitle {
@@ -448,9 +452,14 @@ iframe {
 .section-title h2 {
   font-family: var(--font-heading);
   font-size: clamp(2.5rem, 5vw, 4rem);
-  font-weight: 600;
-  color: var(--color-primary);
+  font-weight: 700;
+  letter-spacing: -0.015em;
+  background: linear-gradient(180deg, #ffffff 15%, #e0c8ff 55%, #a855f7 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
   margin-bottom: 1rem;
+  display: inline-block;
+  padding-bottom: 0.08em;
 }
 
 .section-title p {
@@ -618,8 +627,8 @@ iframe {
   display: flex;
   gap: 2.75rem;
   align-items: center;
-  background: rgba(14, 12, 10, 0.95);
-  border: 1px solid rgba(212, 175, 55, 0.3);
+  background: rgba(13, 11, 18, 0.95);
+  border: 1px solid rgba(192, 132, 252, 0.28);
   border-radius: 20px;
   padding: 2.25rem 2.5rem;
   box-shadow: 0 25px 70px rgba(0, 0, 0, 0.95);
@@ -640,14 +649,14 @@ iframe {
   left: 0;
   right: 0;
   height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(212, 175, 55, 0.85), transparent);
+  background: linear-gradient(90deg, transparent, rgba(192, 132, 252, 0.85), transparent);
   pointer-events: none;
   border-radius: 20px 20px 0 0;
 }
 
 .project-card:hover {
-  border-color: rgba(212, 175, 55, 0.65);
-  box-shadow: 0 30px 85px rgba(0, 0, 0, 0.98), 0 0 30px rgba(212, 175, 55, 0.18);
+  border-color: rgba(192, 132, 252, 0.65);
+  box-shadow: 0 30px 85px rgba(0, 0, 0, 0.98), 0 0 35px rgba(192, 132, 252, 0.2);
 }
 
 .project-card:nth-child(even) {
@@ -659,7 +668,7 @@ iframe {
   max-width: 48%;
   overflow: hidden;
   border-radius: 12px;
-  border: 1px solid rgba(212, 175, 55, 0.15);
+  border: 1px solid rgba(192, 132, 252, 0.18);
   background: #000;
 }
 
@@ -1017,32 +1026,382 @@ body.no-scroll {
 }
 
 /* --------------------
-   10. CONTACT SECTION
+   10. CONTACT SECTION (ESTABLISH HANDSHAKE HUD)
    -------------------- */
 
 .contact {
-  text-align: center;
-}
-
-.contact-socials {
-  margin-top: 6rem;
+  padding: 8.5rem 0 9.5rem 0;
+  position: relative;
+  min-height: 90vh;
   display: flex;
-  justify-content: center;
-  gap: 2.5rem;
+  align-items: center;
 }
 
-.contact-socials a {
-  font-size: 1.1rem;
-  font-weight: 500;
-  color: var(--color-text-muted);
+.contact-container {
+  display: grid;
+  grid-template-columns: 1fr 1.18fr;
+  gap: 4.5rem;
+  align-items: center;
+  width: 100%;
+}
+
+/* LEFT COLUMN: INTEL & HEADLINE */
+.contact-protocol-intel {
+  display: flex;
+  flex-direction: column;
+}
+
+.contact-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 1.25rem;
+  margin-bottom: 1.25rem;
+}
+
+.tag-number {
+  font-family: "Courier New", Courier, monospace;
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  color: #c084fc;
   text-transform: uppercase;
-  letter-spacing: 0.1em;
-  transition: color 0.3s ease, letter-spacing 0.3s ease;
 }
 
-.contact-socials a:hover {
-  color: var(--color-primary);
+.tag-line {
+  display: inline-block;
+  width: 50px;
+  height: 1px;
+  background: linear-gradient(90deg, #c084fc, transparent);
+}
+
+.contact-protocol-title {
+  font-family: var(--font-heading);
+  font-weight: 800;
+  font-size: clamp(2.8rem, 4.2vw, 4.4rem);
+  line-height: 0.96;
+  letter-spacing: -0.015em;
+  text-transform: uppercase;
+  display: flex;
+  flex-direction: column;
+  background: linear-gradient(180deg, #ffffff 15%, #e0c8ff 55%, #a855f7 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 1.5rem;
+}
+
+.contact-protocol-subtext {
+  font-size: 1rem;
+  line-height: 1.65;
+  color: #a0a0b2;
+  max-width: 440px;
+  margin-bottom: 2rem;
+}
+
+.contact-status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  width: fit-content;
+  padding: 0.45rem 1rem;
+  border-radius: 999px;
+  background: rgba(192, 132, 252, 0.08);
+  border: 1px solid rgba(192, 132, 252, 0.25);
+  margin-bottom: 2.25rem;
+}
+
+.status-indicator-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #c084fc;
+  box-shadow: 0 0 10px #c084fc, 0 0 18px rgba(192, 132, 252, 0.6);
+  animation: hudPulse 2.2s infinite ease-in-out;
+}
+
+@keyframes hudPulse {
+  0%, 100% {
+    transform: scale(0.9);
+    opacity: 0.75;
+  }
+  50% {
+    transform: scale(1.2);
+    opacity: 1;
+  }
+}
+
+.status-text {
+  font-family: "Courier New", Courier, monospace;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  color: #e0c8ff;
+  text-transform: uppercase;
+}
+
+.contact-social-channels {
+  display: flex;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  padding-top: 1.75rem;
+}
+
+.channel-link {
+  font-family: "Courier New", Courier, monospace;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  color: #9292a0;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  transition: color 0.25s ease, transform 0.25s ease;
+}
+
+.channel-prefix {
+  color: #c084fc;
+  opacity: 0.8;
+}
+
+.channel-arrow {
+  font-size: 0.9rem;
+  transition: transform 0.25s ease;
+}
+
+.channel-link:hover {
+  color: #ffffff;
+  transform: translateY(-2px);
+}
+
+.channel-link:hover .channel-arrow {
+  transform: translate(2px, -2px);
+  color: #c084fc;
+}
+
+/* RIGHT COLUMN: TACTICAL HUD CARD */
+.contact-hud-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.contact-hud-card {
+  position: relative;
+  background: rgba(13, 12, 18, 0.88);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(192, 132, 252, 0.28);
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.75), inset 0 0 35px rgba(192, 132, 252, 0.04);
+  padding: 2.75rem 2.5rem;
+  border-radius: 3px;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.contact-hud-card:focus-within {
+  border-color: rgba(192, 132, 252, 0.55);
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.8), 0 0 30px rgba(192, 132, 252, 0.12);
+}
+
+/* Precision Corner Notches */
+.hud-corner {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  border-color: #c084fc;
+  pointer-events: none;
+}
+
+.hud-corner-tl {
+  top: -1px;
+  left: -1px;
+  border-top: 2px solid #c084fc;
+  border-left: 2px solid #c084fc;
+}
+
+.hud-corner-tr {
+  top: -1px;
+  right: -1px;
+  border-top: 2px solid #c084fc;
+  border-right: 2px solid #c084fc;
+}
+
+.hud-corner-bl {
+  bottom: -1px;
+  left: -1px;
+  border-bottom: 2px solid #c084fc;
+  border-left: 2px solid #c084fc;
+}
+
+.hud-corner-br {
+  bottom: -1px;
+  right: -1px;
+  border-bottom: 2px solid #c084fc;
+  border-right: 2px solid #c084fc;
+}
+
+/* Form Styles */
+.contact-hud-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.6rem;
+}
+
+.hud-form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+}
+
+.hud-form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+}
+
+.hud-label {
+  font-family: "Courier New", Courier, monospace;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  color: #c084fc;
+  text-transform: uppercase;
+}
+
+.hud-form-group input,
+.hud-form-group textarea {
+  width: 100%;
+  background: rgba(19, 18, 26, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 2px;
+  color: #ffffff;
+  font-family: var(--font-body);
+  font-size: 0.92rem;
+  padding: 0.95rem 1.15rem;
+  outline: none;
+  transition: border-color 0.25s ease, background-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.hud-form-group textarea {
+  resize: vertical;
+  min-height: 120px;
+  line-height: 1.6;
+}
+
+.hud-form-group input::placeholder,
+.hud-form-group textarea::placeholder {
+  color: rgba(255, 255, 255, 0.28);
+  font-size: 0.86rem;
+  font-family: var(--font-body);
+}
+
+.hud-form-group input:focus,
+.hud-form-group textarea:focus {
+  background: rgba(23, 21, 31, 0.98);
+  border-color: rgba(192, 132, 252, 0.7);
+  box-shadow: 0 0 16px rgba(192, 132, 252, 0.2);
+}
+
+/* Submit Button */
+.hud-submit-btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  background: rgba(19, 18, 26, 0.85);
+  border: 1px solid rgba(192, 132, 252, 0.45);
+  color: #e0c8ff;
+  font-family: "Courier New", Courier, monospace;
+  font-size: 0.88rem;
+  font-weight: 700;
   letter-spacing: 0.2em;
+  text-transform: uppercase;
+  padding: 1.15rem 1.5rem;
+  border-radius: 2px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  margin-top: 0.5rem;
+}
+
+.hud-submit-btn .btn-arrow {
+  font-size: 1.05rem;
+  transition: transform 0.25s ease;
+}
+
+.hud-submit-btn:hover {
+  background: rgba(192, 132, 252, 0.15);
+  border-color: #c084fc;
+  color: #ffffff;
+  box-shadow: 0 0 25px rgba(192, 132, 252, 0.3);
+  transform: translateY(-2px);
+}
+
+.hud-submit-btn:hover .btn-arrow {
+  transform: translate(3px, -3px);
+  color: #c084fc;
+}
+
+.hud-submit-btn:active {
+  transform: translateY(0);
+}
+
+.hud-submit-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Feedback log below button */
+.hud-feedback-log {
+  font-family: "Courier New", Courier, monospace;
+  font-size: 0.78rem;
+  letter-spacing: 0.12em;
+  min-height: 20px;
+  text-align: center;
+  transition: opacity 0.3s ease;
+}
+
+.hud-feedback-log.success {
+  color: #c084fc;
+  text-shadow: 0 0 10px rgba(192, 132, 252, 0.5);
+}
+
+.hud-feedback-log.error {
+  color: #ff5c5c;
+  text-shadow: 0 0 10px rgba(255, 92, 92, 0.4);
+}
+
+.hud-feedback-log.processing {
+  color: #e0c8ff;
+}
+
+/* RESPONSIVE LAYOUT */
+@media (max-width: 992px) {
+  .contact-container {
+    grid-template-columns: 1fr;
+    gap: 3.5rem;
+  }
+  .contact-protocol-subtext {
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 650px) {
+  .contact {
+    padding: 6rem 0;
+  }
+  .contact-hud-card {
+    padding: 2rem 1.5rem;
+  }
+  .hud-form-row {
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+  }
+  .contact-protocol-title {
+    font-size: 2.6rem;
+  }
 }
 
 /* --------------------

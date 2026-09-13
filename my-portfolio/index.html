@@ -9,7 +9,7 @@
 
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/locomotive-scroll@3.5.4/dist/locomotive-scroll.css">
 
-  <link rel="stylesheet" href="style.css?v=15">
+  <link rel="stylesheet" href="style.css?v=19">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -401,22 +401,76 @@
       </div>
     </section>
 
-    <section id="contact" class="contact background-section" data-scroll-section>
+        <section id="contact" class="contact background-section" data-scroll-section>
       <div class="section-bg-image" data-scroll data-scroll-speed="-3"
         style="background-image: url('https://i.postimg.cc/CKTPq4gr/Gemini-Generated-Image-gmw2e1gmw2e1gmw2-1.jpg');">
       </div>
-      <div class="container">
-        <div class="section-title reveal-up">
-          <h2>Get In Touch</h2>
-          <p>Got an idea that's waiting to come alive?</p>
-          <p>Let's build it together.</p>
+      <div class="container contact-container">
+        <!-- LEFT COLUMN: PROTOCOL INTEL & DIRECT CHANNELS -->
+        <div class="contact-protocol-intel reveal-up">
+
+
+          <h2 class="contact-protocol-title">
+            <span>ESTABLISH</span>
+            <span>HANDSHAKE.</span>
+          </h2>
+
+          <p class="contact-protocol-subtext">
+            Have a system to fortify, an engineering opportunity, or a collaborative inquiry? Establish a direct connection below.
+          </p>
+
+          <div class="contact-status-badge">
+            <span class="status-indicator-dot"></span>
+            <span class="status-text">SECURE PROTOCOL ACTIVE &bull; 256-BIT ENCRYPTION</span>
+          </div>
+
+          <div class="contact-social-channels">
+            <a href="https://www.linkedin.com/in/joshua-jose-466975371/" target="_blank" rel="noopener noreferrer" class="channel-link">
+              <span class="channel-prefix">//</span> LINKEDIN <span class="channel-arrow">↗</span>
+            </a>
+            <a href="https://github.com/joshua5915g" target="_blank" rel="noopener noreferrer" class="channel-link">
+              <span class="channel-prefix">//</span> GITHUB <span class="channel-arrow">↗</span>
+            </a>
+            <a href="https://x.com/Profess57176192" target="_blank" rel="noopener noreferrer" class="channel-link">
+              <span class="channel-prefix">//</span> X (TWITTER) <span class="channel-arrow">↗</span>
+            </a>
+          </div>
         </div>
-        <div class="contact-socials reveal-up">
-          <a href="https://www.linkedin.com/in/joshua-jose-466975371/" target="_blank"
-            rel="noopener noreferrer">LinkedIn</a>
-          <a href="https://github.com/joshua5915g" target="_blank" rel="noopener noreferrer">GitHub</a>
-          <a href="#" target="_blank" rel="noopener noreferrer">Instagram</a> <a href="https://x.com/Profess57176192"
-            target="_blank" rel="noopener noreferrer">X</a>
+
+        <!-- RIGHT COLUMN: TACTICAL HUD FORM CONTAINER -->
+        <div class="contact-hud-wrapper reveal-up">
+          <div class="contact-hud-card">
+            <!-- HUD Precision Corner Notches -->
+            <div class="hud-corner hud-corner-tl" aria-hidden="true"></div>
+            <div class="hud-corner hud-corner-tr" aria-hidden="true"></div>
+            <div class="hud-corner hud-corner-bl" aria-hidden="true"></div>
+            <div class="hud-corner hud-corner-br" aria-hidden="true"></div>
+
+            <form class="contact-hud-form" id="contactHandshakeForm">
+              <div class="hud-form-row">
+                <div class="hud-form-group">
+                  <label for="handshakeIdentity" class="hud-label">// IDENTITY</label>
+                  <input type="text" id="handshakeIdentity" name="identity" placeholder="Enter name or organization..." required autocomplete="name">
+                </div>
+                <div class="hud-form-group">
+                  <label for="handshakeReturn" class="hud-label">// RETURN_ADDRESS</label>
+                  <input type="email" id="handshakeReturn" name="email" placeholder="Enter return email address..." required autocomplete="email">
+                </div>
+              </div>
+
+              <div class="hud-form-group full-width">
+                <label for="handshakePayload" class="hud-label">// ENCRYPTED_MESSAGE</label>
+                <textarea id="handshakePayload" name="payload" rows="5" placeholder="Enter transmission payload or inquiry..." required></textarea>
+              </div>
+
+              <button type="submit" class="hud-submit-btn" id="handshakeSubmitBtn">
+                <span class="btn-text">AUTHENTICATE &amp; SEND</span>
+                <span class="btn-arrow">↗</span>
+              </button>
+
+              <div class="hud-feedback-log" id="hudFeedbackLog" aria-live="polite"></div>
+            </form>
+          </div>
         </div>
       </div>
     </section>
@@ -438,7 +492,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 
-  <script src="script.js?v=11"></script>
+  <script src="script.js?v=12"></script>
 
   <div class="certificate-modal" id="certificateModal" aria-hidden="true">
     <div class="certificate-modal-backdrop" id="certificateBackdrop"></div>
